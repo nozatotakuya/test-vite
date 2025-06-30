@@ -1,0 +1,27 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5
+
+jobs:
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm test -- --watchAll=false --passWithNoTests
+
+workflows:
+  version: 2
+  test-on-pr:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+                - /^feature\/.*/
